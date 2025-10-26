@@ -1,66 +1,45 @@
 package com.easyquiz.demo.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "questao")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "questao")
 public class Questao {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_criador", nullable = false)
-    private Usuario usuarioCriador;
+    @Column(name = "titulo")
+    private String titulo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_disciplina", nullable = false)
-    private Disciplina disciplina;
+    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
+    private String descricao;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String enunciado;
+    // ENUM virou String
+    @Column(name = "dificuldade", nullable = false)
+    private String dificuldade;
 
-    @Column(name = "tipo_pergunta", nullable = false)
-    private String tipoPergunta;
+    // ENUM virou String
+    @Column(name = "tipo", nullable = false)
+    private String tipo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "nivel_dificuldade", nullable = false)
-    private NivelDificuldade nivelDificuldade;
-
-    @Column(name = "is_publica", nullable = false)
-    private Boolean isPublica = false;
-
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
-
-    @CreationTimestamp
-    @Column(name = "data_criacao", updatable = false)
+    @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
-    @UpdateTimestamp
     @Column(name = "data_ultima_modificacao")
     private LocalDateTime dataUltimaModificacao;
 
-    // Relacionamentos
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OpcaoRespostaQuestao> opcoesResposta;
+    @Column(name = "disciplina_id")
+    private Integer disciplinaId;
 
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL)
-    private List<AvaliacaoUserQuestao> avaliacoes;
-
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL)
-    private List<ProvaQuestao> provasQuestoes;
+    @Column(name = "criado_por")
+    private Integer criadoPor;
 }

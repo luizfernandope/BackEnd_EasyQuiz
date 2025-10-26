@@ -9,13 +9,19 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "disciplina")
-public class Disciplina {
+@Table(name = "opcao_resposta")
+public class OpcaoResposta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "nome", nullable = false, unique = true)
-    private String nome;
+    @Column(name = "questao_id", nullable = false)
+    private Integer questaoId;
+
+    @Column(name = "texto_resposta", nullable = false)
+    private String textoResposta;
+
+    @Column(name = "correta")
+    private Boolean correta;
 }

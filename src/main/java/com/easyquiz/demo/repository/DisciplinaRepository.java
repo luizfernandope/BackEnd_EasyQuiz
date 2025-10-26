@@ -1,9 +1,8 @@
 package com.easyquiz.demo.repository;
 
-import com.easyquiz.demo.model.Disciplina;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.easyquiz.demo.model.Disciplina;
 
-public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
+public interface DisciplinaRepository extends JpaRepository<Disciplina, Integer> {
 
-    boolean existsByNome(String nome);
 }

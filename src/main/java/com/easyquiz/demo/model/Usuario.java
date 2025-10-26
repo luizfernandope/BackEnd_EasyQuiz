@@ -1,49 +1,35 @@
 package com.easyquiz.demo.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
+import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20)
-    private String telefone;
+    @Column(name = "senha", nullable = false)
+    private String senha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_perfil", nullable = false)
-    private TipoPerfil tipoPerfil;
+    // ENUM virou String
+    @Column(name = "tipo", nullable = false)
+    private String tipo; 
 
-    @CreationTimestamp
-    @Column(name = "data_cadastro", updatable = false)
-    private LocalDateTime dataCadastro;
-
-    // Relacionamentos
-    @OneToMany(mappedBy = "usuarioCriador", cascade = CascadeType.ALL)
-    private List<Questao> questoesCriadas;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<AvaliacaoUserQuestao> avaliacoes;
-
-    @OneToMany(mappedBy = "usuarioGerador", cascade = CascadeType.ALL)
-    private List<Prova> provasGeradas;
+    @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime criadoEm;
 }

@@ -1,62 +1,64 @@
 package com.easyquiz.demo.controller;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.easyquiz.demo.model.Disciplina;
 import com.easyquiz.demo.repository.DisciplinaRepository;
 
-import org.springframework.web.bind.annotation.RequestBody; // request body import corrigido (swagger só deu certo depois disso)
+import java.util.*;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/disciplinas")
+@RequestMapping("/disciplina")
 public class DisciplinaController {
-    
+
     private final DisciplinaRepository disciplinaRepository;
 
     public DisciplinaController(DisciplinaRepository disciplinaRepository) {
         this.disciplinaRepository = disciplinaRepository;
     }
-    @GetMapping
+
+    @GetMapping("/listar")
     public List<Disciplina> listarDisciplinas() {
         return disciplinaRepository.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<Disciplina> criarDisciplina(@RequestBody Disciplina disciplina) {
-        if(disciplinaRepository.existsByNome(disciplina.getNome())) {
-            throw new RuntimeException("Disciplina já cadastrada com nome: " + disciplina.getNome());
-        }
-        return ResponseEntity.ok(disciplinaRepository.save(disciplina));
+    @GetMapping("/{id}")
+    public ResponseEntity<Disciplina> obterPorId(@PathVariable Integer id) {
+        Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
+        // Se a disciplina não for encontrada, retorna 404 Not Found
+        if (!disciplina.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        //retorna a disciplina encontrada
+        return ResponseEntity.ok(disciplina.get());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Disciplina> atualizarDisciplina(@PathVariable Long id, @RequestBody Disciplina disciplina) {
+    @PostMapping("/cadastrar")
+    public ResponseEntity<Disciplina> cadastrar(@RequestBody Disciplina disciplina) {
+        Disciplina nova = disciplinaRepository.save(disciplina);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nova);
+    }
 
-        disciplina.setId(id);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Disciplina> atualizar(@PathVariable Integer id, @RequestBody Disciplina disciplinaAtualizada) {
         return disciplinaRepository.findById(id)
-            .map(existingDisciplina -> {
-                existingDisciplina.setNome(disciplina.getNome());
-                disciplinaRepository.save(existingDisciplina);
-                return ResponseEntity.ok(existingDisciplina);
-            })
-            .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com id " + id));
+                .map(disciplina -> {
+                    disciplina.setNome(disciplinaAtualizada.getNome());
+                    Disciplina salvo = disciplinaRepository.save(disciplina);
+                    return ResponseEntity.ok(salvo);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deletarDisciplina(@PathVariable Long id) {
-        if (!disciplinaRepository.existsById(id)) {
-            throw new RuntimeException("Disciplina não encontrada com id " + id);
-        }
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        Disciplina disciplina = disciplinaRepository.findById(id).orElse(null);
+        if (disciplina == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    
         disciplinaRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
 }
