@@ -3,8 +3,19 @@ package com.easyquiz.demo.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.ForeignKey;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +28,21 @@ public class LogCadastro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "admin_id", nullable = false)
-    private Integer adminId;
+    // Admin (foreign key -> usuario.id) with cascade on delete
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "admin_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_logcadastro_admin"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Usuario admin;
 
-    @Column(name = "professor_id", nullable = false)
-    private Integer professorId;
+    // Professor (foreign key -> usuario.id) with cascade on delete
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "professor_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_logcadastro_professor"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Usuario professor;
 
-    @Column(name = "data_hora")
+    // Use columnDefinition to match DEFAULT CURRENT_TIMESTAMP in DB
+    @Column(name = "data_hora", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dataHora;
 }
