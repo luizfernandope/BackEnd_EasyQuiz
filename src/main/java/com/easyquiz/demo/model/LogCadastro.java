@@ -45,4 +45,8 @@ public class LogCadastro {
     // Use columnDefinition to match DEFAULT CURRENT_TIMESTAMP in DB
     @Column(name = "data_hora", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dataHora;
+
+    // NEW FIELD: To record the action (REGISTRATION, MODIFICATION, DELETION)
+    @Column(name = "acao", nullable = false, length = 15)
+    private String acao;
 }
