@@ -127,7 +127,7 @@ public class UsuarioController {
                     log.setAdmin(admin);
                     log.setProfessor(usuarioSalvo); // Usuário alterado
                     log.setDataHora(LocalDateTime.now());
-                    // Se o campo 'acao' (String) foi adicionado a LogCadastro: log.setAcao("ALTERACAO");
+                    log.setAcao("ALTERACAO");
                     logCadastroRepository.save(log);
                     System.out.println("Registrado log de alteração de usuário de id: " + userId + " pelo admin id: " + admin.getId());
 
@@ -177,7 +177,7 @@ public class UsuarioController {
                         log.setAdmin(admin);
                         log.setProfessor(usuarioParaLog); // Usuário excluído
                         log.setDataHora(LocalDateTime.now());
-                        // Se o campo 'acao' (String) foi adicionado a LogCadastro: log.setAcao("EXCLUSAO");
+                        log.setAcao("EXCLUSAO");
                         logCadastroRepository.save(log);
                         System.out.println("Log de exclusão de usuário de id: " + userId + " registrado pelo admin id: " + admin.getId());
                     } catch (Exception e) {

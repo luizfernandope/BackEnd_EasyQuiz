@@ -1,14 +1,12 @@
 package com.easyquiz.demo.controller;
 
 import com.easyquiz.demo.model.LogCadastro;
-import com.easyquiz.demo.model.Usuario;
 import com.easyquiz.demo.repository.LogCadastroRepository;
 import com.easyquiz.demo.repository.UsuarioRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
